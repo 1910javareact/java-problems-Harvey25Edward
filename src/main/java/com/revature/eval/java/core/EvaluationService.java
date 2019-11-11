@@ -277,8 +277,29 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		Map<String, Integer> wordCount = new HashMap<>();
+		
+		//converting non-word characters to the same character for splitting
+		string = string.replaceAll(","," ");
+		string = string.replaceAll("\n", " ");
+		string = string.replaceAll(" +", " ");
+		
+		//splitting the string into individual words
+		String[] wordArr = string.split(" ");
+		
+		int counter;
+		
+		//counting the words
+		for ( String s : wordArr) {
+			if(wordCount.containsKey(s)) {
+				counter = wordCount.get(s) + 1;
+				wordCount.put(s, counter);
+			}else if(!wordCount.containsKey(s)) {
+				wordCount.put(s, 1);
+			}
+		}
+		
+		return wordCount;
 	}
 
 	/**
@@ -551,8 +572,31 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		String[] stringArr = string.split("");
+		Integer checkNum = 0;
+		
+		//this j will keep track of what number we are on
+		int j = 0;
+		
+		//checking the value of the Strings and doing some math based on what they are
+		for(int i = 0; i < stringArr.length; i++) {
+			if(stringArr[i].equals("1") || stringArr[i].equals("2") || stringArr[i].equals("3") || stringArr[i].equals("4") || stringArr[i].equals("5") ||
+				stringArr[i].equals("6") || stringArr[i].equals("7") || stringArr[i].equals("8") || stringArr[i].equals("9") || stringArr[i].equals("0")) {
+				checkNum += (Integer.valueOf(stringArr[i]) * (10 - j));
+			}else if(stringArr[i].equals("-")) {
+				j--;
+			}else if(stringArr[i].equals("X") && (i + 1) == stringArr.length) {
+				checkNum += 10;
+			}else {
+				return false;
+			}
+			j++;
+		}
+		if(checkNum % 11 == 0) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	/**
@@ -569,8 +613,27 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		String[] stringArr = string.split("");
+		String[] alphabetLowercase = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+		String[] alphabetUppercase = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+
+		//for each character cycle through the alphabet and check off the ones that we find
+		for(String s: stringArr) {
+			for(int i = 0; i < alphabetLowercase.length; i++) {
+				if(s.equals(alphabetLowercase[i]) || s.equals(alphabetUppercase[i])) {
+					alphabetLowercase[i] = null;
+					i = alphabetLowercase.length;
+				}
+			}
+		}
+		
+		//check if all letters have been checked off
+		for(String s: alphabetLowercase) {
+			if(s != null) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -600,10 +663,19 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int sumNum = 0;
+		
+		//starting at 1 to avoid problems with 0 we cycle through the numbers and check if they have one of our set numbers as factors
+		for (int j = 1; j < i; j++) {
+			for (int k = 0; k < set.length; k++) {
+				if(j % set[k] == 0) {
+					sumNum += j;
+					k = set.length;
+				}
+			}
+		}
+		return sumNum;
 	}
-
 	/**
 	 * 19. Given a number determine whether or not it is valid per the Luhn formula.
 	 * 
@@ -640,11 +712,7 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
-	}
-
+	
 	/**
 	 * 20. Parse and evaluate simple math word problems returning the answer as an
 	 * integer.
@@ -672,9 +740,37 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		String[] stringArr = string.split(" ");
+		int firstNumGiven = 0;
+		int secondNumGiven = 0;
+		String operatorGiven = "";
+		int answer = 0;
+		
+		//remove the ? and set secondNumGiven
+		stringArr[stringArr.length - 1] = stringArr[stringArr.length - 1].substring(0, stringArr[stringArr.length - 1].length() - 1);
+		secondNumGiven = Integer.valueOf(stringArr[stringArr.length - 1]);
+		
+		//find the firstNumGiven and operatorGiven
+		for(int i = 0; i < stringArr.length; i++) {
+			if(i == 2) {
+				firstNumGiven = Integer.valueOf(stringArr[i]);
+			}else if(i == 3) {
+				operatorGiven = stringArr[i];
+			}
+		}
+		
+		if(operatorGiven.equals("plus")) {
+			answer = firstNumGiven + secondNumGiven;
+		}else if(operatorGiven.equals("minus")) {
+			answer = firstNumGiven - secondNumGiven;
+		}else if(operatorGiven.equals("multiplied")) {
+			answer = firstNumGiven * secondNumGiven;
+		}else if(operatorGiven.equals("divided")) {
+			answer = firstNumGiven / secondNumGiven;
+		}
+		return answer;
 	}
 
 }
