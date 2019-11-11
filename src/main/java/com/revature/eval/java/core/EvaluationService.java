@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +15,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
+
 		
-		return "";
+		
+		
+		char[] c = string.toCharArray();
+		int n = c.length;
+		int j = 0;
+		String news ="";
+		//char newc[] = new char[n];
+		for (int i = n-1 ; i >= 0 ; i--) {
+			
+	
+		news = news + c[i]; 
+			}
+		
+		//news=Arrays.toString(newc);
+		return news;
 	}
 
 	/**
@@ -28,7 +44,18 @@ public class EvaluationService {
 	 */
 	public String acronym(String phrase) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		int l = phrase.length();
+		char c =phrase.charAt(0);
+		String acronym = Character.toString(c);
+		for(int i = 0; i<l;i++) {
+			if((phrase.charAt(i)==' ')|| (phrase.charAt(i)=='-') ){
+				acronym = acronym + phrase.charAt(i+1);
+			}
+			acronym=acronym.toUpperCase();
+		}
+		return acronym;
+	
+	 
 	}
 
 	/**
@@ -82,16 +109,29 @@ public class EvaluationService {
 
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
+		if (sideOne == sideTwo) {
+			if(sideOne == sideThree) {
+				return true;
+			}
+			
+		}
+		
 			return false;
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
+			if((sideOne == sideTwo) || (sideOne == sideThree) || (sideTwo == sideThree)) {
+				return true;
+			}
+			
 			return false;
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
+			if ((sideOne != sideTwo ) && (sideOne != sideThree) && (sideTwo != sideThree)) { 
+				return true;
+			}
 			return false;
 		}
 
@@ -113,8 +153,55 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		string = string.toLowerCase();
+		int score = 0 ;
+		for(int i = 0; i < string.length() ;i++  ) {
+			char value = string.charAt(i);
+			switch (value) {
+			case 'a' :
+			case 'e':
+			case 'i':
+			case 'o':
+			case 'u':
+			case 'l':
+			case 'n':
+			case 'r':
+			case 's':
+			case 't':
+				score = score + 1;
+				break;
+			case 'd':
+			case 'g':
+				score = score+ 2;
+				break;
+			case 'b':
+			case 'c':
+			case 'm':
+			case 'p':
+				score = score + 3;
+				break;
+			case 'f':
+			case 'h':
+			case 'v':
+			case 'w':
+			case 'y':
+				score = score + 4;
+				break;
+			case 'k':
+				score = score + 5;
+				break;
+			case 'j':
+			case 'x':
+				score = score + 8;
+				break;
+			case 'q':
+			case 'z':
+				score = score + 10;
+				break;	
+			}
+		}
+		
+		return score ;
 	}
 
 	/**
@@ -149,9 +236,36 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+			char[] inputNum = string.toCharArray();
+			String phoneNumber = "";
+			
+			//adding just the numbers input into a new string
+			for (int i = 0; i < inputNum.length; i++) {
+				if (inputNum[i] == '1' || inputNum[i] == '2' || inputNum[i] == '3' || inputNum[i] == '4' || inputNum[i] == '5'
+				|| inputNum[i] == '6' || inputNum[i] == '7' || inputNum[i] == '8' || inputNum[i] == '9' || inputNum[i] == '0') {
+					phoneNumber += inputNum[i];
+				}
+			}
+			
+			//removing country code if applicable
+			if(phoneNumber.charAt(0) == 1) {
+				phoneNumber = phoneNumber.substring(1);
+			}
+			
+			//checking to see if we still have a valid phone number
+			if(phoneNumber.length() != 10) {
+				throw new IllegalArgumentException();
+			}
+			
+			//checking that the numbers that can be from 2-9 are not 0 or 1
+			if(phoneNumber.charAt(0) == 1 || phoneNumber.charAt(0) == 0 || phoneNumber.charAt(3) == 1 || phoneNumber.charAt(3) == 0) {
+				throw new IllegalArgumentException();
+			}
+			
+			return phoneNumber;
+		}
+
+	
 
 	/**
 	 * 6. Given a phrase, count the occurrences of each word in that phrase.
@@ -243,9 +357,34 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+			String[] wordArr = string.split(" ");
+			
+			//converting to Pig Latin
+			for(int i = 0; i < wordArr.length; i++) {
+				if(wordArr[i].charAt(0) == 'a' || wordArr[i].charAt(0) == 'e' || wordArr[i].charAt(0) == 'i' || wordArr[i].charAt(0) == 'o' || wordArr[i].charAt(0) == 'u') {
+					wordArr[i] += "ay";
+					
+				//finding the first vowel except for qu and moving all letters before to the end and adding ay 
+				}else if(wordArr[i].charAt(0) != 'a' && wordArr[i].charAt(0) != 'e' && wordArr[i].charAt(0) != 'i' && wordArr[i].charAt(0) != 'o' && wordArr[i].charAt(0) != 'u') {
+					for(int j = 1; j < wordArr[i].length(); j++) {
+						if((wordArr[i].charAt(j) == 'a' || wordArr[i].charAt(j) == 'e' || wordArr[i].charAt(j) == 'i' || wordArr[i].charAt(j) == 'o' || wordArr[i].charAt(j) == 'u') && wordArr[i].charAt(j - 1) != 'q') {
+							wordArr[i] = (wordArr[i].substring(j) + wordArr[i].substring(0,j) + "ay");
+							j = wordArr[i].length();
+						}
+					}
+				}
+			}
+			
+			//putting back into a single string
+			String wordString = "";
+			for(String s : wordArr) {
+				wordString += (s + " ");
+			}
+			wordString = wordString.trim();
+			return wordString;
+		}
+
+	
 
 	/**
 	 * 9. An Armstrong number is a number that is the sum of its own digits each
